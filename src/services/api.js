@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Gunakan baseURL production
 const API = axios.create({
-  baseURL: 'https://be-final-task.vercel.app/api', // Backend production
+  baseURL: 'https://bebaru.vercel.app/api', // Backend production
 });
 
 // Tambahkan token JWT ke setiap request
