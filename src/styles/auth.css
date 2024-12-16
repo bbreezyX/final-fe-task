@@ -1,0 +1,165 @@
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.login-page .login-card {
+  background-color: #ffffff;
+  color: #333333;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  width: 350px;
+  text-align: center;
+}
+
+.login-page h3 {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #4a4a4a;
+}
+.login-page .form-control {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 14px;
+  margin-bottom: 15px;
+  color: #4a4a4a;
+  background-color: #f9f9f9;
+  transition: border-color 0.2s ease;
+}
+
+.login-page .form-control:focus {
+  border-color: #7aabd4;
+  box-shadow: 0 0 8px rgba(122, 171, 212, 0.3);
+}
+
+.login-page .btn-primary {
+  background-color: #000000;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  font-size: 16px;
+  color: #ffffff;
+  font-weight: bold;
+  width: 100%;
+  transition:
+    background-color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.login-page .btn-link {
+  font-size: 14px;
+  color: #7aabd4;
+  text-decoration: none;
+  margin-top: 10px;
+}
+
+.login-page .btn-link:hover {
+  color: #333333;
+  text-decoration: underline;
+}
+
+.login-page .form-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #4a4a4a;
+}
+
+.login-page .btn-link {
+  font-size: 14px;
+  color: #333333;
+  font-weight: 600;
+  text-decoration: none;
+  margin-top: 10px;
+  padding: 8px;
+  display: inline-block;
+  transition:
+    color 0.3s ease,
+    transform 0.2s ease;
+  border-radius: 5px;
+}
+
+.register-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.register-page .register-card {
+  background-color: #ffffff;
+  color: #333333;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  width: 350px;
+  text-align: center;
+}
+
+.register-page h3 {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #4a4a4a;
+}
+
+.register-page .form-control {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 14px;
+  margin-bottom: 15px;
+  color: #4a4a4a;
+  background-color: #f9f9f9;
+  transition: border-color 0.2s ease;
+}
+
+.register-page .form-control:focus {
+  border-color: #7aabd4;
+  box-shadow: 0 0 8px rgba(122, 171, 212, 0.3);
+}
+
+.register-page .btn-primary {
+  background-color: #000000;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  font-size: 16px;
+  color: #ffffff;
+  font-weight: bold;
+  width: 100%;
+  transition:
+    background-color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.register-page .btn-secondary {
+  background-color: #d6d6d6;
+  color: #333333;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  font-size: 16px;
+  font-weight: bold;
+  width: 100%;
+  margin-top: 10px;
+  transition:
+    background-color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.register-page .btn-secondary:hover {
+  background-color: #bfbfbf;
+}
+
+.register-page .form-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #4a4a4a;
+}
