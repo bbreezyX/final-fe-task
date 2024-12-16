@@ -1,7 +1,8 @@
 import axios from 'axios';
 
+// Gunakan baseURL production
 const API = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: 'https://final-be-taskm.vercel.app/api', // Backend production
 });
 
 // Tambahkan token JWT ke setiap request
@@ -13,8 +14,11 @@ API.interceptors.request.use((config) => {
   return config;
 });
 
-export const login = (data) => API.post('/auth/login', data);
-export const register = (data) => API.post('/auth/register', data);
+// Auth API
+export const login = (data) => API.post('/users/login', data);
+export const register = (data) => API.post('/users/signup', data);
+
+// Task API
 export const getTasks = () => API.get('/tasks');
 export const createTask = (data) => API.post('/tasks', data);
 export const updateTask = (id, data) => API.put(`/tasks/${id}`, data);
