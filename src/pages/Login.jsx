@@ -13,11 +13,14 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log('Sending login data:', form);
       const { data } = await login(form);
+      console.log('Login response:', data);
       localStorage.setItem('token', data.token);
-      navigate('/dashboard'); // Navigate to dashboard
+      navigate('/dashboard');
     } catch (error) {
-      alert('Login failed. Please check your credentials.');
+      console.error('Login error:', error.response?.data || error); // perbaiki error handling
+      alert(error.response?.data?.message || 'Login failed. Please check your credentials.');
     }
   };
 

@@ -7,12 +7,21 @@ const API = axios.create({
 
 // Tambahkan token JWT ke setiap request
 API.interceptors.request.use((config) => {
+  console.log('Request config:', config);
   const token = localStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
+
+API.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    console.error('API Error:', error.response?.data);
+    return Promise.reject(error);
+  }
+);
 
 // Auth API
 export const login = (data) => API.post('/users/login', data);
