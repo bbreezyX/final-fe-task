@@ -112,7 +112,8 @@ const TaskList = () => {
                     <strong>Priority:</strong> {formatStatus(task.priority)}
                   </p>
                   <p>
-                    <strong>Due Date:</strong> {task.dueDate || 'Not specified'}
+                    <strong>Due Date:</strong>{' '}
+                    {task.due_date ? new Date(task.due_date).toLocaleDateString() : 'Not specified'}
                   </p>
                 </div>
                 <div className="card-footer d-flex justify-content-between">
