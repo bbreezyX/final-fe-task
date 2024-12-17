@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { getTasks } from '../services/api';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import jwt_decode from 'jwt-decode';
 import {
   faTasks,
   faListCheck,
@@ -26,25 +25,10 @@ const Dashboard = () => {
   const [taskStats, setTaskStats] = useState(initialStats);
   const [loading, setLoading] = useState(true);
   const [isUsingFallback, setIsUsingFallback] = useState(false);
-  const [userData, setUserData] = useState({ nama: '' });
 
   useEffect(() => {
     loadDashboardData();
-    loadUserData();
   }, []);
-
-  const loadUserData = () => {
-    try {
-      const token = localStorage.getItem('token');
-      if (token) {
-        const decoded = jwt_decode(token);
-        setUserData({ nama: decoded.nama || 'User' });
-      }
-    } catch (error) {
-      console.error('Error loading user data:', error);
-      setUserData({ nama: 'User' });
-    }
-  };
 
   const loadDashboardData = async () => {
     try {
@@ -139,10 +123,7 @@ const Dashboard = () => {
   return (
     <div className="main-container">
       <div className="container">
-        <div className="text-center mb-5">
-          <h2 className="display-6 mb-2">Welcome, {userData.nama}!</h2>
-          <p className="text-muted">Here's your task overview</p>
-        </div>
+        <h1 className="text-center mb-5">Welcome</h1>
 
         <div className="row">
           <DashboardCard
