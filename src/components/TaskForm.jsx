@@ -10,8 +10,8 @@ const TaskForm = () => {
     description: '',
     status: 'todo',
     priority: 'medium',
-    assigneeId: '',
-    dueDate: '',
+    assignee_id: '',
+    due_date: '',
   });
   const navigate = useNavigate();
 
@@ -124,13 +124,13 @@ const TaskForm = () => {
             <input
               type="date"
               className="custom-input"
-              id="dueDate"
-              name="dueDate"
+              id="due_date"
+              name="due_date"
               value={form.dueDate} // Nilai tetap string kosong jika null
               onChange={(e) =>
                 setForm({
                   ...form,
-                  dueDate: e.target.value !== '' ? e.target.value : '',
+                  due_date: e.target.value !== '' ? e.target.value : '',
                 })
               }
             />

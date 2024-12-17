@@ -110,8 +110,8 @@ const TaskEdit = () => {
               type="date"
               id="due_date"
               className="custom-input"
-              value={form.dueDate}
-              onChange={(e) => setForm({ ...form, dueDate: e.target.value })}
+              value={form.due_date}
+              onChange={(e) => setForm({ ...form, due_date: e.target.value })}
             />
           </div>
           <div className="custom-button-group">
