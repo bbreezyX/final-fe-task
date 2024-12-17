@@ -115,12 +115,12 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="container mt-5 pt-5 dashboard-container">
-      {isUsingFallback && (
+    <div className="container mt-5 pt-5">
+      {/* {isUsingFallback && (
         <div className="alert alert-info text-center mb-4">
           Currently displaying sample data. API connection not available.
         </div>
-      )}
+      )} */}
 
       <h1 className="title text-center mb-4">Dashboard</h1>
 

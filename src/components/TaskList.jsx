@@ -173,11 +173,11 @@ const TaskList = () => {
   return (
     <div className="container mt-5 pt-5 dashboard-container">
       <h1 className="title text-center mb-4">Task List</h1>
-      {isUsingFallback && (
+      {/* {isUsingFallback && (
         <div className="alert alert-info text-center mb-4">
           Currently using sample data. API connection not available.
         </div>
-      )}
+      )} */}
       <div className="mb-4 d-flex justify-content-center">
         <div className="d-flex gap-3">
           <input
