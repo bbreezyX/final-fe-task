@@ -17,29 +17,6 @@ const TaskEdit = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(true);
-
-  // // Sample data untuk testing
-  // const sampleData = {
-  //   1: {
-  //     id: 1,
-  //     title: 'Membuat Fitur Login',
-  //     description: 'Implementasi sistem autentikasi menggunakan JWT token',
-  //     status: 'in_progress',
-  //     priority: 'high',
-  //     assignee_id: '1',
-  //     due_date: '2024-12-25',
-  //   },
-  //   2: {
-  //     id: 2,
-  //     title: 'Database Design',
-  //     description: 'Merancang struktur database untuk aplikasi task management',
-  //     status: 'todo',
-  //     priority: 'medium',
-  //     assignee_id: '2',
-  //     due_date: '2024-12-20',
-  //   },
-  // };
-
   const [form, setForm] = useState({
     title: '',
     description: '',
@@ -55,25 +32,18 @@ const TaskEdit = () => {
 
   const loadTask = async () => {
     try {
-      // Untuk testing, gunakan sample data
-      const task = sampleData[id];
+      const response = await getTasks();
+      const task = response.data.find((t) => t.id === parseInt(id));
       if (task) {
         setForm(task);
-        toast.info('Using sample data for editing');
       } else {
-        // Jika tidak ada di sample, coba dari API
-        const response = await getTasks();
-        const apiTask = response.data.find((t) => t.id === parseInt(id));
-        if (apiTask) {
-          setForm(apiTask);
-        } else {
-          toast.error('Task not found');
-          navigate('/task');
-        }
+        toast.error('Task not found');
+        navigate('/task');
       }
     } catch (error) {
       console.error('Failed to load task:', error);
       toast.error('Failed to load task');
+      navigate('/task');
     } finally {
       setLoading(false);
     }
@@ -84,8 +54,7 @@ const TaskEdit = () => {
     setLoading(true);
 
     try {
-      // Untuk testing, simulasi delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await updateTask(id, form);
       toast.success('Task berhasil diupdate!');
       navigate('/task');
     } catch (error) {
