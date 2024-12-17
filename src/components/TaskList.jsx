@@ -7,11 +7,80 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const TaskList = () => {
+  // Hardcoded data sebagai fallback
+  const fallbackTasks = [
+    {
+      id: 1,
+      title: 'Membuat Fitur Login',
+      description: 'Implementasi sistem autentikasi menggunakan JWT token',
+      status: 'in_progress',
+      priority: 'high',
+      due_date: '2024-12-25',
+    },
+    {
+      id: 2,
+      title: 'Database Design',
+      description: 'Merancang struktur database untuk aplikasi task management',
+      status: 'todo',
+      priority: 'medium',
+      due_date: '2024-12-20',
+    },
+    {
+      id: 3,
+      title: 'Testing API',
+      description: 'Melakukan testing pada semua endpoint API',
+      status: 'done',
+      priority: 'low',
+      due_date: '2024-12-15',
+    },
+    {
+      id: 4,
+      title: 'UI/UX Design',
+      description: 'Membuat desain antarmuka pengguna yang responsif',
+      status: 'todo',
+      priority: 'high',
+      due_date: '2024-12-18',
+    },
+    {
+      id: 5,
+      title: 'Bug Fixing',
+      description: 'Memperbaiki bug pada fitur task filtering',
+      status: 'in_progress',
+      priority: 'medium',
+      due_date: '2024-12-22',
+    },
+    {
+      id: 6,
+      title: 'Deploy Aplikasi',
+      description: 'Melakukan deployment aplikasi ke server production',
+      status: 'todo',
+      priority: 'high',
+      due_date: '2024-12-28',
+    },
+    {
+      id: 7,
+      title: 'Deploy Aplikasi',
+      description: 'Melakukan deployment aplikasi ke server production',
+      status: 'todo',
+      priority: 'high',
+      due_date: '2024-12-28',
+    },
+    {
+      id: 8,
+      title: 'Deploy Aplikasi',
+      description: 'Melakukan deployment aplikasi ke server production',
+      status: 'todo',
+      priority: 'high',
+      due_date: '2024-12-28',
+    },
+  ];
+
   const [tasks, setTasks] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [isUsingFallback, setIsUsingFallback] = useState(false);
   const tasksPerPage = 6;
 
   useEffect(() => {
@@ -21,10 +90,19 @@ const TaskList = () => {
   const loadTasks = async () => {
     try {
       const response = await getTasks();
-      setTasks(response.data);
+      if (response.data && response.data.length > 0) {
+        setTasks(response.data);
+        setIsUsingFallback(false);
+      } else {
+        setTasks(fallbackTasks);
+        setIsUsingFallback(true);
+        toast.info('Using sample tasks data');
+      }
     } catch (error) {
       console.error('Failed to fetch tasks:', error);
-      toast.error('Failed to fetch tasks');
+      setTasks(fallbackTasks);
+      setIsUsingFallback(true);
+      toast.info('Using sample tasks data');
     } finally {
       setLoading(false);
     }
@@ -32,6 +110,12 @@ const TaskList = () => {
 
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this task?')) return;
+
+    if (isUsingFallback) {
+      setTasks(tasks.filter((task) => task.id !== id));
+      toast.success('Task berhasil dihapus! (Local data)');
+      return;
+    }
 
     try {
       await deleteTask(id);
@@ -89,6 +173,11 @@ const TaskList = () => {
   return (
     <div className="container mt-5">
       <h1 className="title text-center mb-4">Task List</h1>
+      {isUsingFallback && (
+        <div className="alert alert-info text-center mb-4">
+          Currently using sample data. API connection not available.
+        </div>
+      )}
       <div className="mb-4 d-flex justify-content-center">
         <div className="d-flex gap-3">
           <input
@@ -144,15 +233,12 @@ const TaskList = () => {
                     {task.due_date ? new Date(task.due_date).toLocaleDateString() : 'Not specified'}
                   </p>
                 </div>
-                <div className="card-footer bg-transparent d-flex justify-content-between">
-                  <Link to={`/edit-task/${task.id}`} className="btn btn-sm btn-outline-warning">
-                    <FontAwesomeIcon icon={faEdit} /> Edit
+                <div className="card-footer d-flex justify-content-between">
+                  <Link to={`/edit-task/${task.id}`} className="icon-btn text-warning">
+                    <FontAwesomeIcon icon={faEdit} />
                   </Link>
-                  <button
-                    className="btn btn-sm btn-outline-danger"
-                    onClick={() => handleDelete(task.id)}
-                  >
-                    <FontAwesomeIcon icon={faTrash} /> Delete
+                  <button className="icon-btn text-danger" onClick={() => handleDelete(task.id)}>
+                    <FontAwesomeIcon icon={faTrash} />
                   </button>
                 </div>
               </div>
@@ -166,21 +252,16 @@ const TaskList = () => {
       </div>
 
       {totalPages > 1 && (
-        <div className="d-flex justify-content-center mt-4">
-          <nav aria-label="Page navigation">
-            <ul className="pagination">
-              {[...Array(totalPages)].map((_, index) => (
-                <li
-                  key={index}
-                  className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}
-                >
-                  <button className="page-link" onClick={() => setCurrentPage(index + 1)}>
-                    {index + 1}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </nav>
+        <div className="pagination-container">
+          {[...Array(totalPages)].map((_, index) => (
+            <button
+              key={index}
+              className={`pagination-button ${index + 1 === currentPage ? 'active' : ''}`}
+              onClick={() => setCurrentPage(index + 1)}
+            >
+              {index + 1}
+            </button>
+          ))}
         </div>
       )}
     </div>
