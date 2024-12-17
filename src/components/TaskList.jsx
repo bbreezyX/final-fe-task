@@ -128,11 +128,13 @@ const TaskList = () => {
   };
 
   const filteredTasks = useMemo(() => {
-    return tasks.filter((task) => {
-      const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesStatus = statusFilter === 'All' || task.status === statusFilter;
-      return matchesSearch && matchesStatus;
-    });
+    return tasks
+      .sort((a, b) => b.id - a.id) // Mengurutkan berdasarkan ID terbaru
+      .filter((task) => {
+        const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesStatus = statusFilter === 'All' || task.status === statusFilter;
+        return matchesSearch && matchesStatus;
+      });
   }, [tasks, searchTerm, statusFilter]);
 
   const indexOfLastTask = currentPage * tasksPerPage;
@@ -252,17 +254,46 @@ const TaskList = () => {
       </div>
 
       {totalPages > 1 && (
-        <div className="pagination-container">
-          {[...Array(totalPages)].map((_, index) => (
-            <button
-              key={index}
-              className={`pagination-button ${index + 1 === currentPage ? 'active' : ''}`}
-              onClick={() => setCurrentPage(index + 1)}
-            >
-              {index + 1}
-            </button>
-          ))}
-        </div>
+        <nav aria-label="Page navigation" className="mt-4">
+          <ul className="pagination justify-content-center">
+            {/* Previous Button */}
+            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+              <button
+                className="page-link"
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                &laquo;
+              </button>
+            </li>
+
+            {/* Page Numbers */}
+            {[...Array(totalPages)].map((_, index) => {
+              const pageNumber = index + 1;
+              return (
+                <li
+                  key={index}
+                  className={`page-item ${pageNumber === currentPage ? 'active' : ''}`}
+                >
+                  <button className="page-link" onClick={() => setCurrentPage(pageNumber)}>
+                    {pageNumber}
+                  </button>
+                </li>
+              );
+            })}
+
+            {/* Next Button */}
+            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+              <button
+                className="page-link"
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                &raquo;
+              </button>
+            </li>
+          </ul>
+        </nav>
       )}
     </div>
   );

@@ -261,32 +261,36 @@ body {
   }
 }
 
-.pagination-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
+.pagination {
+  gap: 5px;
 }
 
-.pagination-button {
-  margin: 0 5px;
+.page-link {
+  border-radius: 4px !important;
+  color: #666;
   padding: 8px 16px;
-  border: 1px solid #ddd;
+  transition: all 0.3s ease;
+  border: 1px solid #dee2e6;
+  background: white;
+}
+
+.page-link:hover {
   background-color: #f8f9fa;
-  color: #333;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  color: #0d6efd;
+  border-color: #dee2e6;
 }
 
-.pagination-button:hover {
-  background-color: #000000;
-  color: #fff;
+.page-item.active .page-link {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  color: white;
 }
 
-.pagination-button.active {
-  background-color: #000000;
-  color: #fff;
-  cursor: default;
+.page-item.disabled .page-link {
+  color: #6c757d;
+  pointer-events: none;
+  background-color: #fff;
+  border-color: #dee2e6;
 }
 
 @media (max-width: 576px) {
