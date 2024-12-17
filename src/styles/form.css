@@ -6,6 +6,7 @@ body {
   padding: 0;
 }
 
+/* Layout containers */
 .form-wrapper {
   min-height: 100vh;
   background-color: #f3f4f6;
@@ -24,7 +25,7 @@ body {
   padding: 2rem;
 }
 
-/* Stepper styles */
+/* Stepper navigation */
 .stepper-container {
   display: flex;
   justify-content: space-between;
@@ -69,7 +70,7 @@ body {
   background: #3b82f6;
 }
 
-/* Form content styles */
+/* Form content */
 .step-content {
   padding: 1.5rem 1rem;
 }
@@ -87,6 +88,7 @@ body {
   gap: 1rem;
 }
 
+/* Form inputs */
 .step-input {
   width: 100%;
   padding: 0.75rem;
@@ -94,6 +96,7 @@ body {
   border-radius: 6px;
   font-size: 0.95rem;
   transition: all 0.3s ease;
+  background: white;
 }
 
 .step-input:focus {
@@ -169,24 +172,109 @@ select.step-input {
   background: #059669;
 }
 
-/* Responsive styles */
+/* Enhanced Responsive styles */
+@media (max-width: 1024px) {
+  .stepper-form-container {
+    max-width: 550px;
+  }
+}
+
+@media (max-width: 768px) {
+  .stepper-form-container {
+    max-width: 500px;
+    padding: 1.5rem;
+  }
+
+  .step-content {
+    padding: 1.25rem 0.75rem;
+  }
+
+  .stepper-step svg {
+    width: 22px;
+    height: 22px;
+  }
+}
+
 @media (max-width: 640px) {
+  .form-wrapper {
+    padding: 0.5rem;
+  }
+
   .stepper-form-container {
     padding: 1rem;
     margin: 0.5rem;
+    border-radius: 8px;
+  }
+
+  .stepper-container {
+    padding: 0 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .stepper-step {
+    gap: 0.25rem;
   }
 
   .stepper-step span {
     font-size: 0.75rem;
   }
 
+  .stepper-step svg {
+    width: 20px;
+    height: 20px;
+    padding: 4px;
+  }
+
+  .stepper-line {
+    margin: 0 0.5rem;
+  }
+
+  .step-content {
+    padding: 1rem 0.5rem;
+  }
+
+  .step-content h3 {
+    font-size: 1.1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .step-input {
+    padding: 0.625rem;
+    font-size: 0.9rem;
+  }
+
   .stepper-buttons {
     flex-direction: column-reverse;
     gap: 0.75rem;
+    padding: 0 0.5rem;
   }
 
   .step-button {
     width: 100%;
     justify-content: center;
+    padding: 0.625rem 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .stepper-form-container {
+    padding: 0.75rem;
+  }
+
+  .stepper-step span {
+    font-size: 0.7rem;
+  }
+
+  .stepper-step svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .step-content h3 {
+    font-size: 1rem;
+  }
+
+  .step-input {
+    font-size: 0.85rem;
   }
 }

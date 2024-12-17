@@ -53,7 +53,7 @@ const TaskForm = () => {
   };
 
   const StepIndicator = () => (
-    <div className="stepper-container">
+    <div className="stepper-container mt-8 mb-8">
       <div className={`stepper-step ${currentStep >= 1 ? 'active' : ''}`}>
         <FontAwesomeIcon icon={faInfoCircle} />
         <span>Basic Info</span>
@@ -157,6 +157,7 @@ const TaskForm = () => {
   return (
     <div className="form-wrapper">
       <div className="stepper-form-container">
+        <h2 className="text-2xl font-bold mb-6 text-center">Add Task</h2>
         <StepIndicator />
         <form onSubmit={handleSubmit}>
           {renderStepContent()}

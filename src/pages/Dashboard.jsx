@@ -106,88 +106,96 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="d-flex justify-content-center align-items-center" style={{ height: '60vh' }}>
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
+      <div className="main-container">
+        <div className="container">
+          <div
+            className="d-flex justify-content-center align-items-center"
+            style={{ height: '60vh' }}
+          >
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container mt-5 pt-5">
-      {/* {isUsingFallback && (
-        <div className="alert alert-info text-center mb-4">
-          Currently displaying sample data. API connection not available.
+    <div className="main-container">
+      <div className="container">
+        <h1 className="text-center mb-5">Dashboard</h1>
+
+        <div className="row">
+          <DashboardCard
+            title="Total Tasks"
+            value={taskStats.totalTasks}
+            icon={faTasks}
+            color="bg-primary"
+            subtitle={`${getProgressPercentage()}% Completed`}
+          />
+          <DashboardCard
+            title="To Do"
+            value={taskStats.todo}
+            icon={faListCheck}
+            color="bg-warning"
+          />
+          <DashboardCard
+            title="In Progress"
+            value={taskStats.inProgress}
+            icon={faSpinner}
+            color="bg-info"
+          />
+          <DashboardCard
+            title="Completed"
+            value={taskStats.done}
+            icon={faCheckDouble}
+            color="bg-success"
+          />
         </div>
-      )} */}
 
-      <h1 className="title text-center mb-4">Dashboard</h1>
-
-      <div className="row">
-        <DashboardCard
-          title="Total Tasks"
-          value={taskStats.totalTasks}
-          icon={faTasks}
-          color="bg-primary"
-          subtitle={`${getProgressPercentage()}% Completed`}
-        />
-        <DashboardCard title="To Do" value={taskStats.todo} icon={faListCheck} color="bg-warning" />
-        <DashboardCard
-          title="In Progress"
-          value={taskStats.inProgress}
-          icon={faSpinner}
-          color="bg-info"
-        />
-        <DashboardCard
-          title="Completed"
-          value={taskStats.done}
-          icon={faCheckDouble}
-          color="bg-success"
-        />
-      </div>
-
-      <div className="row mt-4">
-        <div className="col-md-8">
-          <div className="card shadow-sm">
-            <div className="card-header bg-white border-bottom">
-              <h5 className="card-titles">Priority Distribution</h5>
-            </div>
-            <div className="card-body">
-              <div className="row text-center">
-                <div className="col-md-4 mb-3 mb-md-0">
-                  <h6 className="text-danger mb-2">High Priority</h6>
-                  <div className="badge bg-danger p-2" style={{ fontSize: '1.1rem' }}>
-                    {taskStats.highPriority}
+        <div className="row mt-4">
+          <div className="col-md-8">
+            <div className="card shadow-sm">
+              <div className="card-header bg-white border-bottom">
+                <h5 className="card-titles mb-0">Priority Distribution</h5>
+              </div>
+              <div className="card-body">
+                <div className="row text-center">
+                  <div className="col-md-4 mb-3 mb-md-0">
+                    <h6 className="text-danger mb-2">High Priority</h6>
+                    <div className="badge bg-danger p-2" style={{ fontSize: '1.1rem' }}>
+                      {taskStats.highPriority}
+                    </div>
                   </div>
-                </div>
-                <div className="col-md-4 mb-3 mb-md-0">
-                  <h6 className="text-warning mb-2">Medium Priority</h6>
-                  <div className="badge bg-warning p-2" style={{ fontSize: '1.1rem' }}>
-                    {taskStats.mediumPriority}
+                  <div className="col-md-4 mb-3 mb-md-0">
+                    <h6 className="text-warning mb-2">Medium Priority</h6>
+                    <div className="badge bg-warning p-2" style={{ fontSize: '1.1rem' }}>
+                      {taskStats.mediumPriority}
+                    </div>
                   </div>
-                </div>
-                <div className="col-md-4">
-                  <h6 className="text-success mb-2">Low Priority</h6>
-                  <div className="badge bg-success p-2" style={{ fontSize: '1.1rem' }}>
-                    {taskStats.lowPriority}
+                  <div className="col-md-4">
+                    <h6 className="text-success mb-2">Low Priority</h6>
+                    <div className="badge bg-success p-2" style={{ fontSize: '1.1rem' }}>
+                      {taskStats.lowPriority}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="col-md-4">
-          <div className="card shadow-sm bg-danger text-white">
-            <div className="card-body">
-              <div className="d-flex justify-content-between align-items-center">
-                <div>
-                  <h5 className="card-title mb-1">Overdue Tasks</h5>
-                  <h3 className="mb-0">{taskStats.overdueTasks}</h3>
-                  <small className="text-white-50">Tasks past due date</small>
+          <div className="col-md-4">
+            <div className="card shadow-sm bg-danger text-white">
+              <div className="card-body">
+                <div className="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h5 className="mb-1">Overdue Tasks</h5>
+                    <h3 className="mb-0">{taskStats.overdueTasks}</h3>
+                    <small className="text-white-50">Tasks past due date</small>
+                  </div>
+                  <FontAwesomeIcon icon={faExclamationTriangle} className="fa-2x text-white-50" />
                 </div>
-                <FontAwesomeIcon icon={faExclamationTriangle} className="fa-2x text-white-50" />
               </div>
             </div>
           </div>

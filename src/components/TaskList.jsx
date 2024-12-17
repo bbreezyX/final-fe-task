@@ -2,9 +2,8 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { getTasks, deleteTask } from '../services/api';
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash, faSearch } from '@fortawesome/free-solid-svg-icons';
 
 const TaskList = () => {
   // Hardcoded data sebagai fallback
@@ -59,14 +58,6 @@ const TaskList = () => {
     },
     {
       id: 7,
-      title: 'Deploy Aplikasi',
-      description: 'Melakukan deployment aplikasi ke server production',
-      status: 'todo',
-      priority: 'high',
-      due_date: '2024-12-28',
-    },
-    {
-      id: 8,
       title: 'Deploy Aplikasi',
       description: 'Melakukan deployment aplikasi ke server production',
       status: 'todo',
@@ -129,7 +120,7 @@ const TaskList = () => {
 
   const filteredTasks = useMemo(() => {
     return tasks
-      .sort((a, b) => b.id - a.id) // Mengurutkan berdasarkan ID terbaru
+      .sort((a, b) => b.id - a.id)
       .filter((task) => {
         const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesStatus = statusFilter === 'All' || task.status === statusFilter;
@@ -154,147 +145,168 @@ const TaskList = () => {
     return statusMap[status] || status;
   };
 
-  const getStatusColor = (status) => {
-    const colorMap = {
-      todo: 'bg-warning',
-      in_progress: 'bg-info',
-      done: 'bg-success',
+  const getStatusBadgeClass = (status) => {
+    const statusClasses = {
+      todo: 'bg-warning text-dark',
+      in_progress: 'bg-info text-white',
+      done: 'bg-success text-white',
     };
-    return colorMap[status] || 'bg-secondary';
+    return `badge ${statusClasses[status] || 'bg-secondary'}`;
   };
 
-  const getPriorityColor = (priority) => {
-    const colorMap = {
+  const getPriorityClass = (priority) => {
+    const priorityClasses = {
       low: 'text-success',
       medium: 'text-warning',
       high: 'text-danger',
     };
-    return colorMap[priority] || 'text-secondary';
+    return priorityClasses[priority] || 'text-secondary';
   };
 
   return (
-    <div className="container mt-5 pt-5 dashboard-container">
-      <h1 className="title text-center mb-4">Task List</h1>
-      {/* {isUsingFallback && (
-        <div className="alert alert-info text-center mb-4">
-          Currently using sample data. API connection not available.
-        </div>
-      )} */}
-      <div className="mb-4 d-flex justify-content-center">
-        <div className="d-flex gap-3">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Search tasks by title..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <select
-            className="form-select"
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-          >
-            <option value="All">All</option>
-            <option value="todo">To Do</option>
-            <option value="in_progress">In Progress</option>
-            <option value="done">Done</option>
-          </select>
-        </div>
-      </div>
+    <div className="main-container">
+      <div className="container pb-5">
+        <h1 className="text-center mb-5">Task List</h1>
 
-      <div className="row">
-        {loading ? (
-          <div className="col-12 text-center">
-            <div className="spinner-border text-primary" role="status">
-              <span className="visually-hidden">Loading...</span>
+        {/* Search and Filter Section */}
+        <div className="row justify-content-center mb-4">
+          <div className="col-md-8">
+            <div className="d-flex gap-3">
+              <div className="input-group">
+                <span className="input-group-text bg-white">
+                  <FontAwesomeIcon icon={faSearch} className="text-secondary" />
+                </span>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Search tasks..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+              <select
+                className="form-select"
+                style={{ width: 'auto' }}
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+              >
+                <option value="All">All Status</option>
+                <option value="todo">To Do</option>
+                <option value="in_progress">In Progress</option>
+                <option value="done">Done</option>
+              </select>
             </div>
           </div>
-        ) : currentTasks.length > 0 ? (
-          currentTasks.map((task) => (
-            <div className="col-md-4 mb-4" key={task.id}>
-              <div className="card h-100 shadow-sm">
-                <div className={`card-header ${getStatusColor(task.status)} text-white`}>
-                  <h5 className="card-title mb-0">{task.title}</h5>
-                </div>
-                <div className="card-body d-flex flex-column" style={{ minHeight: '200px' }}>
-                  <p className="description-container overflow-auto mb-3">{task.description}</p>
-                  <p className="mb-1">
-                    <strong>Status:</strong>{' '}
-                    <span className={`badge ${getStatusColor(task.status)}`}>
-                      {formatStatus(task.status)}
-                    </span>
-                  </p>
-                  <p className="mb-1">
-                    <strong>Priority:</strong>{' '}
-                    <span className={getPriorityColor(task.priority)}>
-                      {formatStatus(task.priority)}
-                    </span>
-                  </p>
-                  <p className="mb-0">
-                    <strong>Due Date:</strong>{' '}
-                    {task.due_date ? new Date(task.due_date).toLocaleDateString() : 'Not specified'}
-                  </p>
-                </div>
-                <div className="card-footer d-flex justify-content-between">
-                  <Link to={`/edit-task/${task.id}`} className="icon-btn text-warning">
-                    <FontAwesomeIcon icon={faEdit} />
-                  </Link>
-                  <button className="icon-btn text-danger" onClick={() => handleDelete(task.id)}>
-                    <FontAwesomeIcon icon={faTrash} />
-                  </button>
-                </div>
+        </div>
+
+        {/* Task Cards Grid */}
+        <div className="row g-4">
+          {loading ? (
+            <div
+              className="d-flex justify-content-center align-items-center"
+              style={{ height: '300px' }}
+            >
+              <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">Loading...</span>
               </div>
             </div>
-          ))
-        ) : (
-          <div className="col-12">
-            <p className="text-center mt-4">No tasks found.</p>
-          </div>
-        )}
-      </div>
+          ) : (
+            currentTasks.map((task) => (
+              <div key={task.id} className="col-md-6 col-lg-4">
+                <div className="card h-100 shadow-sm border-0 hover-shadow">
+                  <div className="card-body p-4">
+                    <div className="d-flex justify-content-between align-items-start mb-3 title-section">
+                      <h5 className="card-title text-truncate mb-0 me-2">{task.title}</h5>
+                      <span className={getStatusBadgeClass(task.status)}>
+                        {formatStatus(task.status)}
+                      </span>
+                    </div>
 
-      {totalPages > 1 && (
-        <nav aria-label="Page navigation" className="mt-4">
-          <ul className="pagination justify-content-center">
-            {/* Previous Button */}
-            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                    <div className="divider"></div>
+
+                    <p
+                      className="card-text text-muted mb-3 mt-3"
+                      style={{
+                        overflow: 'hidden',
+                        display: '-webkit-box',
+                        WebkitLineClamp: '3',
+                        WebkitBoxOrient: 'vertical',
+                        minHeight: '4.5em',
+                      }}
+                    >
+                      {task.description}
+                    </p>
+
+                    <div className="mb-3">
+                      <div className="d-flex align-items-center mb-2">
+                        <span className="text-muted me-2">Priority:</span>
+                        <span className={`fw-semibold ${getPriorityClass(task.priority)}`}>
+                          {formatStatus(task.priority)}
+                        </span>
+                      </div>
+                      <div className="d-flex align-items-center">
+                        <span className="text-muted me-2">Due Date:</span>
+                        <span>
+                          {task.due_date
+                            ? new Date(task.due_date).toLocaleDateString()
+                            : 'Not specified'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="card-footer bg-white p-3">
+                    <div className="d-flex justify-content-end gap-3">
+                      <Link to={`/edit-task/${task.id}`} className="btn btn-link text-warning p-0">
+                        <FontAwesomeIcon icon={faEdit} />
+                      </Link>
+                      <button
+                        onClick={() => handleDelete(task.id)}
+                        className="btn btn-link text-danger p-0"
+                      >
+                        <FontAwesomeIcon icon={faTrash} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Pagination with custom styling */}
+        {totalPages > 1 && (
+          <div className="d-flex justify-content-center mt-4 mb-4">
+            <div className="custom-pagination">
               <button
-                className="page-link"
+                className="pagination-button"
                 onClick={() => setCurrentPage(currentPage - 1)}
                 disabled={currentPage === 1}
               >
-                &laquo;
+                <span>&lt;</span>
               </button>
-            </li>
 
-            {/* Page Numbers */}
-            {[...Array(totalPages)].map((_, index) => {
-              const pageNumber = index + 1;
-              return (
-                <li
+              {[...Array(totalPages)].map((_, index) => (
+                <button
                   key={index}
-                  className={`page-item ${pageNumber === currentPage ? 'active' : ''}`}
+                  className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
+                  onClick={() => setCurrentPage(index + 1)}
                 >
-                  <button className="page-link" onClick={() => setCurrentPage(pageNumber)}>
-                    {pageNumber}
-                  </button>
-                </li>
-              );
-            })}
+                  {index + 1}
+                </button>
+              ))}
 
-            {/* Next Button */}
-            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
               <button
-                className="page-link"
+                className="pagination-button"
                 onClick={() => setCurrentPage(currentPage + 1)}
                 disabled={currentPage === totalPages}
               >
-                &raquo;
+                <span>&gt;</span>
               </button>
-            </li>
-          </ul>
-        </nav>
-      )}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

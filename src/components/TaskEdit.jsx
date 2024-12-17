@@ -30,13 +30,6 @@ const TaskEdit = () => {
     loadTask();
   }, [id]);
 
-  // Effect untuk menghapus due date saat status completed
-  useEffect(() => {
-    if (form.status === 'done') {
-      setForm((prev) => ({ ...prev, due_date: '' }));
-    }
-  }, [form.status]);
-
   const loadTask = async () => {
     try {
       const response = await getTasks();
@@ -154,17 +147,13 @@ const TaskEdit = () => {
                 value={form.assignee_id}
                 onChange={(e) => setForm({ ...form, assignee_id: e.target.value })}
               />
-              {form.status !== 'done' ? (
-                <input
-                  type="date"
-                  className="step-input"
-                  value={form.due_date}
-                  onChange={(e) => setForm({ ...form, due_date: e.target.value })}
-                  required
-                />
-              ) : (
-                <div className="alert alert-info">Due date is not required for completed tasks</div>
-              )}
+              <input
+                type="date"
+                className="step-input"
+                value={form.due_date}
+                onChange={(e) => setForm({ ...form, due_date: e.target.value })}
+                required
+              />
             </div>
           </div>
         );
@@ -188,7 +177,7 @@ const TaskEdit = () => {
   return (
     <div className="form-wrapper">
       <div className="stepper-form-container">
-        <h2 className="text-center mb-4">Edit Task #{id}</h2>
+        <h2 className="text-center mb-4">Edit Task</h2>
         {form.title && (
           <div className="alert alert-info text-center mb-4">Editing: {form.title}</div>
         )}

@@ -1,11 +1,12 @@
-
 .card {
-  border: 0px solid transparent
+  border: 0px solid transparent;
   border-radius: 1.25rem;
   background-color: #ffffff;
-  transition: all .5s ease-in-out
+  transition: all 0.5s ease-in-out;
   cursor: pointer;
   overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
 }
 
 .card:hover {
@@ -23,7 +24,7 @@
 }
 
 .card-title {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 600;
   margin-bottom: 0.75rem;
   color: #333;
@@ -46,72 +47,48 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px; 
-  height: 40px; 
-  border-radius: 50%; 
-  background-color: #f8f9fa; 
-  border: 1px solid #ddd; 
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
   transition: all 0.3s ease;
   cursor: pointer;
   text-decoration: none;
 }
 
-
 .icon-btn:hover {
   background-color: #e9ecef;
   border-color: #ccc;
-  transform: scale(1.1); 
+  transform: scale(1.1);
 }
 
 .icon-btn:active {
-  transform: scale(0.95); 
+  transform: scale(0.95);
 }
 
 .icon-btn.text-warning {
-  color: #ffc107; 
+  color: #ffc107;
 }
 
 .icon-btn.text-warning:hover {
-  background-color: rgba(255, 193, 7, 0.1); 
+  background-color: rgba(255, 193, 7, 0.1);
 }
 
-
 .icon-btn.text-danger {
-  color: #dc3545; 
+  color: #dc3545;
 }
 
 .icon-btn.text-danger:hover {
-  background-color: rgba(220, 53, 69, 0.1); 
+  background-color: rgba(220, 53, 69, 0.1);
 }
-
 
 .icon-btn svg {
-  font-size: 1.2rem; 
+  font-size: 1.2rem;
 }
 
-
-@media (max-width: 576px) {
-  .icon-btn {
-    width: 36px;
-    height: 36px;
-  }
-
-  .icon-btn svg {
-    font-size: 1rem; 
-  }
-}
-
-
-/* Add to your global CSS file */
 body {
-  padding-top: 72px; /* Sesuaikan dengan tinggi navbar */
-}
-
-/* Untuk responsive */
-@media (max-width: 991.98px) {
-  body {
-    padding-top: 64px; /* Ukuran yang lebih kecil untuk mobile */
-  }
+  padding-top: 72px;
 }
 
 .bg-dashboard {
@@ -123,7 +100,7 @@ body {
 }
 
 .dashboard-container {
-  margin-top: 100px; /* Sesuaikan dengan tinggi navbar */
+  margin-top: 100px;
 }
 
 .btn-danger.btn-sm {
@@ -167,16 +144,10 @@ body {
   text-transform: capitalize;
 }
 
-.card {
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
-}
-
-.card-title {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #ffffff;
+.card .divider {
+  height: 1px;
+  background-color: #e9ecef;
+  margin: 0 -1.5rem;
 }
 
 .card-titles {
@@ -186,10 +157,10 @@ body {
   text-align: center;
 }
 
-.card-text {
-  font-weight: 600;
-  font-size: 1rem; !important;
-  line-height: 1.25;
+.card .card-footer {
+  background-color: white;
+  border-top: 1px solid #e9ecef;
+  margin-top: 1rem;
 }
 
 .card .btn {
@@ -200,9 +171,9 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2px;
-  position: ;
   width: 100%;
 }
+
 .title {
   text-align: center;
   font-size: 2.5rem;
@@ -230,39 +201,42 @@ body {
   border-radius: 4px;
 }
 
-@media (max-width: 768px) {
-  .table {
-    width: 100%;
-    display: block;
-  }
-
-  .table thead {
-    display: none;
-  }
-
-  .table tr {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 15px;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    overflow: hidden;
-  }
-
-  .table td {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    border-top: 1px solid #e0e0e0;
-  }
-
-  .table td:first-child {
-    border-top: none;
-  }
+.custom-pagination {
+  display: flex;
+  gap: 5px;
+  align-items: center;
 }
 
-.pagination {
-  gap: 5px;
+.pagination-button {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: 1px solid #dee2e6;
+  background: white;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.pagination-button:hover:not(:disabled) {
+  background-color: #e9ecef;
+  border-color: #dee2e6;
+  color: #0d6efd;
+}
+
+.pagination-button.active {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  color: white;
+}
+
+.pagination-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 .page-link {
@@ -293,14 +267,121 @@ body {
   border-color: #dee2e6;
 }
 
+/* Responsive styles */
+@media (max-width: 1400px) {
+  .container {
+    max-width: 1140px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .container {
+    max-width: 960px;
+  }
+}
+
+@media (max-width: 991.98px) {
+  body {
+    padding-top: 64px;
+  }
+
+  .container {
+    max-width: 720px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    max-width: 540px;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .table {
+    width: 100%;
+    display: block;
+  }
+
+  .table thead {
+    display: none;
+  }
+
+  .table tr {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .table td {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .table td:first-child {
+    border-top: none;
+  }
+
+  .custom-pagination {
+    justify-content: center;
+  }
+}
+
 @media (max-width: 576px) {
+  .container {
+    padding: 1rem;
+  }
+
   .card {
     margin-bottom: 1rem;
   }
+
   .card-title {
     font-size: 1rem;
   }
+
   .card-text {
     font-size: 0.85rem;
+  }
+
+  .icon-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .icon-btn svg {
+    font-size: 1rem;
+  }
+
+  .status-todo,
+  .status-inprogress,
+  .status-done {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+  }
+
+  .pagination-button {
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
+  }
+
+  .dashboard-container {
+    margin-top: 70px;
+  }
+
+  .title {
+    font-size: 1.75rem;
+  }
+
+  .btn-danger.btn-sm {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.4rem;
   }
 }
