@@ -1,49 +1,68 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { createPortal } from 'react-dom';
+
+const Modal = ({ isOpen, onClose, onConfirm }) => {
+  if (!isOpen) return null;
+
+  return createPortal(
+    <div
+      className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+      style={{
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        zIndex: 1050,
+      }}
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-4 p-4"
+        style={{
+          maxWidth: '400px',
+          width: '90%',
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          className="position-absolute top-0 end-0 p-3 border-0 bg-transparent"
+          onClick={onClose}
+        >
+          <FontAwesomeIcon icon={faXmark} className="text-secondary" />
+        </button>
+
+        <h5 className="mb-2 pe-4">Konfirmasi Penghapusan Task</h5>
+        <p className="text-secondary mb-4 fs-6">
+          Apakah Anda yakin ingin menghapus task ini? Tindakan ini tidak dapat dibatalkan.
+        </p>
+
+        <div className="d-flex justify-content-end gap-2">
+          <button className="btn btn-light px-3" onClick={onClose}>
+            Cancel
+          </button>
+          <button className="btn btn-danger px-3" onClick={onConfirm}>
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
+};
 
 const DeleteConfirmationModal = ({ onConfirm }) => {
-  const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleConfirm = () => {
     onConfirm();
-    handleClose();
+    setIsOpen(false);
   };
 
   return (
     <>
-      <button onClick={handleShow} className="btn btn-link text-danger p-0">
+      <button onClick={() => setIsOpen(true)} className="btn btn-link text-danger p-0">
         <FontAwesomeIcon icon={faTrash} />
       </button>
-
-      {show && (
-        <div className="modal show d-block" tabIndex="-1">
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Konfirmasi Penghapusan</h5>
-                <button type="button" className="btn-close" onClick={handleClose}></button>
-              </div>
-              <div className="modal-body">
-                <p>Apakah Anda yakin ingin menghapus task ini?</p>
-                <p className="text-muted mb-0">Tindakan ini tidak dapat dibatalkan.</p>
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-outline-secondary" onClick={handleClose}>
-                  Cancel
-                </button>
-                <button type="button" className="btn btn-danger" onClick={handleConfirm}>
-                  Delete
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="modal-backdrop show"></div>
-        </div>
-      )}
+      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} onConfirm={handleConfirm} />
     </>
   );
 };

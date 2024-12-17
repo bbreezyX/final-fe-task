@@ -101,7 +101,7 @@ const TaskList = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this task?')) return;
+    // if (!window.confirm('Are you sure you want to delete this task?')) return;
 
     if (isUsingFallback) {
       setTasks(tasks.filter((task) => task.id !== id));
