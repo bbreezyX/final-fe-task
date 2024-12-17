@@ -4,6 +4,7 @@ import { getTasks, deleteTask } from '../services/api';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash, faSearch } from '@fortawesome/free-solid-svg-icons';
+import DeleteConfirmationModal from '../pages/Modal';
 
 const TaskList = () => {
   // Hardcoded data sebagai fallback
@@ -260,12 +261,7 @@ const TaskList = () => {
                       <Link to={`/edit-task/${task.id}`} className="btn btn-link text-warning p-0">
                         <FontAwesomeIcon icon={faEdit} />
                       </Link>
-                      <button
-                        onClick={() => handleDelete(task.id)}
-                        className="btn btn-link text-danger p-0"
-                      >
-                        <FontAwesomeIcon icon={faTrash} />
-                      </button>
+                      <DeleteConfirmationModal onConfirm={() => handleDelete(task.id)} />
                     </div>
                   </div>
                 </div>
