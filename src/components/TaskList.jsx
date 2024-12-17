@@ -171,7 +171,7 @@ const TaskList = () => {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5 pt-5 dashboard-container">
       <h1 className="title text-center mb-4">Task List</h1>
       {isUsingFallback && (
         <div className="alert alert-info text-center mb-4">
