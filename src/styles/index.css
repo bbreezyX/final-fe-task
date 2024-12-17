@@ -102,8 +102,16 @@
 }
 
 
-.body {
-  font-family: 'Poppins', sans-serif;
+/* Add to your global CSS file */
+body {
+  padding-top: 72px; /* Sesuaikan dengan tinggi navbar */
+}
+
+/* Untuk responsive */
+@media (max-width: 991.98px) {
+  body {
+    padding-top: 64px; /* Ukuran yang lebih kecil untuk mobile */
+  }
 }
 
 .bg-dashboard {
@@ -165,6 +173,13 @@
   font-size: 1.2rem;
   font-weight: bold;
   color: #ffffff;
+}
+
+.card-titles {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #000000;
+  text-align: center;
 }
 
 .card-text {

@@ -68,7 +68,6 @@ const Dashboard = () => {
   };
 
   const handleFallbackData = () => {
-    // Sample data when API fails
     setTaskStats({
       totalTasks: 6,
       todo: 2,
@@ -116,14 +115,14 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5 pt-4">
       {isUsingFallback && (
         <div className="alert alert-info text-center mb-4">
           Currently displaying sample data. API connection not available.
         </div>
       )}
 
-      <h1 className="title text-center mb-4">Task Dashboard</h1>
+      <h1 className="title text-center mb-4">Dashboard</h1>
 
       <div className="row">
         <DashboardCard
@@ -151,20 +150,28 @@ const Dashboard = () => {
       <div className="row mt-4">
         <div className="col-md-8">
           <div className="card shadow-sm">
+            <div className="card-header bg-white border-bottom">
+              <h5 className="card-titles">Priority Distribution</h5>
+            </div>
             <div className="card-body">
-              <h5 className="card-title mb-4">Priority Distribution</h5>
-              <div className="d-flex justify-content-between align-items-center">
-                <div className="text-center">
-                  <div className="badge bg-danger p-2 mb-2">{taskStats.highPriority}</div>
-                  <div>High</div>
+              <div className="row text-center">
+                <div className="col-md-4 mb-3 mb-md-0">
+                  <h6 className="text-danger mb-2">High Priority</h6>
+                  <div className="badge bg-danger p-2" style={{ fontSize: '1.1rem' }}>
+                    {taskStats.highPriority}
+                  </div>
                 </div>
-                <div className="text-center">
-                  <div className="badge bg-warning p-2 mb-2">{taskStats.mediumPriority}</div>
-                  <div>Medium</div>
+                <div className="col-md-4 mb-3 mb-md-0">
+                  <h6 className="text-warning mb-2">Medium Priority</h6>
+                  <div className="badge bg-warning p-2" style={{ fontSize: '1.1rem' }}>
+                    {taskStats.mediumPriority}
+                  </div>
                 </div>
-                <div className="text-center">
-                  <div className="badge bg-success p-2 mb-2">{taskStats.lowPriority}</div>
-                  <div>Low</div>
+                <div className="col-md-4">
+                  <h6 className="text-success mb-2">Low Priority</h6>
+                  <div className="badge bg-success p-2" style={{ fontSize: '1.1rem' }}>
+                    {taskStats.lowPriority}
+                  </div>
                 </div>
               </div>
             </div>
@@ -178,6 +185,7 @@ const Dashboard = () => {
                 <div>
                   <h5 className="card-title mb-1">Overdue Tasks</h5>
                   <h3 className="mb-0">{taskStats.overdueTasks}</h3>
+                  <small className="text-white-50">Tasks past due date</small>
                 </div>
                 <FontAwesomeIcon icon={faExclamationTriangle} className="fa-2x text-white-50" />
               </div>
