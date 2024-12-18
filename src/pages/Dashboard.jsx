@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { getTasks } from '../services/api';
-import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faTasks,
@@ -24,7 +23,6 @@ const Dashboard = () => {
 
   const [taskStats, setTaskStats] = useState(initialStats);
   const [loading, setLoading] = useState(true);
-  const [isUsingFallback, setIsUsingFallback] = useState(false);
 
   useEffect(() => {
     loadDashboardData();
@@ -34,12 +32,6 @@ const Dashboard = () => {
     try {
       const response = await getTasks();
       const tasks = response.data;
-
-      if (!tasks || tasks.length === 0) {
-        handleFallbackData();
-        return;
-      }
-
       const currentDate = new Date();
 
       const stats = {
@@ -57,28 +49,11 @@ const Dashboard = () => {
       };
 
       setTaskStats(stats);
-      setIsUsingFallback(false);
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error);
-      handleFallbackData();
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleFallbackData = () => {
-    setTaskStats({
-      totalTasks: 6,
-      todo: 2,
-      inProgress: 3,
-      done: 1,
-      highPriority: 2,
-      mediumPriority: 3,
-      lowPriority: 1,
-      overdueTasks: 1,
-    });
-    setIsUsingFallback(true);
-    toast.info('Using sample dashboard data');
   };
 
   const getProgressPercentage = () => {
