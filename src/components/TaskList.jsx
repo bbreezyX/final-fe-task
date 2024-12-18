@@ -10,6 +10,7 @@ import {
   faUser,
   faUserPlus,
   faClipboardList,
+  faPlus,
 } from '@fortawesome/free-solid-svg-icons';
 import DeleteConfirmationModal from '../pages/Modal';
 
@@ -19,10 +20,8 @@ const TaskList = () => {
   const [statusFilter, setStatusFilter] = useState('All');
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [isUsingFallback, setIsUsingFallback] = useState(false);
   const tasksPerPage = 6;
 
-  // Ambil current user ID dari localStorage
   const currentUserId = parseInt(localStorage.getItem('userId'));
 
   useEffect(() => {
@@ -33,28 +32,18 @@ const TaskList = () => {
     try {
       const response = await getTasks();
       if (response.data) {
-        // Filter tasks untuk user yang sedang login
         const userTasks = response.data.filter(
           (task) => task.creator_id === currentUserId || task.assignee_id === currentUserId
         );
-
-        if (userTasks.length > 0) {
-          setTasks(userTasks);
-          setIsUsingFallback(false);
-        } else {
-          setTasks([]);
-          setIsUsingFallback(true);
-          toast.info('You have no tasks yet');
-        }
+        setTasks(userTasks);
       } else {
         setTasks([]);
-        setIsUsingFallback(true);
         toast.info('No tasks found');
       }
     } catch (error) {
       console.error('Failed to fetch tasks:', error);
-      setIsUsingFallback(true);
       toast.error('Failed to load tasks');
+      setTasks([]);
     } finally {
       setLoading(false);
     }
@@ -64,10 +53,10 @@ const TaskList = () => {
     try {
       await deleteTask(id);
       setTasks(tasks.filter((task) => task.id !== id));
-      toast.success('Task berhasil dihapus!');
+      toast.success('Task deleted successfully!');
     } catch (error) {
       console.error('Failed to delete task:', error);
-      toast.error('Failed to delete task');
+      toast.error('Failed to delete task. Please try again.');
     }
   };
 
@@ -116,12 +105,135 @@ const TaskList = () => {
     return priorityClasses[priority] || 'text-secondary';
   };
 
+  const NoTasksMessage = () => (
+    <div className="col-12">
+      <div className="card shadow-sm border-0 p-5">
+        <div className="text-center">
+          <FontAwesomeIcon
+            icon={faClipboardList}
+            className="text-muted mb-4"
+            style={{ fontSize: '4rem' }}
+          />
+          <h3 className="mb-3">No Tasks Found</h3>
+
+          {searchTerm || statusFilter !== 'All' ? (
+            <div>
+              <p className="text-muted mb-4">
+                No tasks match your current filters. Try adjusting your search criteria or clearing
+                filters.
+              </p>
+              <div className="d-flex justify-content-center gap-3">
+                <button
+                  className="btn btn-outline-secondary"
+                  onClick={() => {
+                    setSearchTerm('');
+                    setStatusFilter('All');
+                  }}
+                >
+                  Clear Filters
+                </button>
+                <Link to="/add-task" className="btn btn-primary">
+                  <FontAwesomeIcon icon={faPlus} className="me-2" />
+                  Create New Task
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <p className="text-muted mb-4">
+                You don't have any tasks yet. Start by creating your first task!
+              </p>
+              <Link to="/add-task" className="btn btn-primary">
+                <FontAwesomeIcon icon={faPlus} className="me-2" />
+                Create New Task
+              </Link>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
+  const TaskCard = ({ task }) => (
+    <div className="card h-100 shadow-sm border-0 hover-shadow">
+      <div className="card-body p-4">
+        <div className="d-flex justify-content-between align-items-start mb-3">
+          <h5 className="card-title text-truncate mb-0 me-2">{task.title}</h5>
+          <span className={getStatusBadgeClass(task.status)}>{formatStatus(task.status)}</span>
+        </div>
+
+        <div className="divider"></div>
+
+        <p
+          className="card-text text-muted mb-3 mt-3"
+          style={{
+            overflow: 'hidden',
+            display: '-webkit-box',
+            WebkitLineClamp: '3',
+            WebkitBoxOrient: 'vertical',
+            minHeight: '4.5em',
+          }}
+        >
+          {task.description}
+        </p>
+
+        <div className="mb-3">
+          <div className="d-flex align-items-center mb-2">
+            <span className="text-muted me-2">Priority:</span>
+            <span className={`fw-semibold ${getPriorityClass(task.priority)}`}>
+              {formatStatus(task.priority)}
+            </span>
+          </div>
+
+          <div className="d-flex align-items-center mb-2">
+            <span className="text-muted me-2">Due Date:</span>
+            <span>
+              {task.due_date ? new Date(task.due_date).toLocaleDateString() : 'Not specified'}
+            </span>
+          </div>
+
+          <div className="border-top pt-2 mt-2">
+            {task.creator_id !== currentUserId && (
+              <div className="d-flex align-items-center mb-2">
+                <FontAwesomeIcon icon={faUser} className="text-primary me-2" />
+                <span className="text-muted me-2">From:</span>
+                <span className="text-primary">
+                  {task.creator?.nama} ({task.creator?.username})
+                </span>
+              </div>
+            )}
+
+            <div className="d-flex align-items-center">
+              <FontAwesomeIcon icon={faUserPlus} className="text-success me-2" />
+              <span className="text-muted me-2">
+                {task.creator_id === currentUserId ? 'Assigned to:' : 'Also assigned to:'}
+              </span>
+              <span className="text-success">
+                {task.assignee ? `${task.assignee.nama} (${task.assignee.username})` : 'Unassigned'}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="card-footer bg-white p-3">
+        <div className="d-flex justify-content-end gap-3">
+          <Link to={`/edit-task/${task.id}`} className="btn btn-link text-warning p-0">
+            <FontAwesomeIcon icon={faEdit} />
+          </Link>
+          {task.creator_id === currentUserId && (
+            <DeleteConfirmationModal onConfirm={() => handleDelete(task.id)} />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="main-container">
       <div className="container pb-5">
-        <h1 className="text-center mb-5"></h1>
+        <div className="d-flex justify-content-between align-items-center mb-5"></div>
 
-        {/* Search and Filter Section */}
         <div className="row justify-content-center mb-4">
           <div className="col-md-8">
             <div className="d-flex gap-3">
@@ -152,7 +264,6 @@ const TaskList = () => {
           </div>
         </div>
 
-        {/* Task Cards Grid or Empty State */}
         <div className="row g-4">
           {loading ? (
             <div
@@ -163,115 +274,19 @@ const TaskList = () => {
                 <span className="visually-hidden">Loading...</span>
               </div>
             </div>
-          ) : isUsingFallback ? (
-            <div className="col-12">
-              <div className="text-center py-5">
-                <FontAwesomeIcon
-                  icon={faClipboardList}
-                  className="text-muted mb-3"
-                  style={{ fontSize: '4rem' }}
-                />
-                <h3 className="text-muted">No Tasks Found</h3>
-                <p className="text-muted mb-4">You don't have any tasks yet.</p>
-                <Link to="/add-task" className="btn btn-primary">
-                  Create Your First Task
-                </Link>
-              </div>
-            </div>
+          ) : filteredTasks.length === 0 ? (
+            <NoTasksMessage />
           ) : (
             currentTasks.map((task) => (
               <div key={task.id} className="col-md-6 col-lg-4">
-                <div className="card h-100 shadow-sm border-0 hover-shadow">
-                  <div className="card-body p-4">
-                    <div className="d-flex justify-content-between align-items-start mb-3 title-section">
-                      <h5 className="card-title text-truncate mb-0 me-2">{task.title}</h5>
-                      <span className={getStatusBadgeClass(task.status)}>
-                        {formatStatus(task.status)}
-                      </span>
-                    </div>
-
-                    <div className="divider"></div>
-
-                    <p
-                      className="card-text text-muted mb-3 mt-3"
-                      style={{
-                        overflow: 'hidden',
-                        display: '-webkit-box',
-                        WebkitLineClamp: '3',
-                        WebkitBoxOrient: 'vertical',
-                        minHeight: '4.5em',
-                      }}
-                    >
-                      {task.description}
-                    </p>
-
-                    <div className="mb-3">
-                      <div className="d-flex align-items-center mb-2">
-                        <span className="text-muted me-2">Priority:</span>
-                        <span className={`fw-semibold ${getPriorityClass(task.priority)}`}>
-                          {formatStatus(task.priority)}
-                        </span>
-                      </div>
-
-                      <div className="d-flex align-items-center mb-2">
-                        <span className="text-muted me-2">Due Date:</span>
-                        <span>
-                          {task.due_date
-                            ? new Date(task.due_date).toLocaleDateString()
-                            : 'Not specified'}
-                        </span>
-                      </div>
-
-                      {/* Task Assignment Info */}
-                      <div className="border-top pt-2 mt-2">
-                        {/* Show creator info if task is assigned to current user */}
-                        {task.creator_id !== currentUserId && (
-                          <div className="d-flex align-items-center mb-2">
-                            <FontAwesomeIcon icon={faUser} className="text-primary me-2" />
-                            <span className="text-muted me-2">From:</span>
-                            <span className="text-primary">
-                              {task.creator?.nama} ({task.creator?.username})
-                            </span>
-                          </div>
-                        )}
-
-                        {/* Show assignee info */}
-                        <div className="d-flex align-items-center">
-                          <FontAwesomeIcon icon={faUserPlus} className="text-success me-2" />
-                          <span className="text-muted me-2">
-                            {task.creator_id === currentUserId
-                              ? 'Assigned to:'
-                              : 'Also assigned to:'}
-                          </span>
-                          <span className="text-success">
-                            {task.assignee
-                              ? `${task.assignee.nama} (${task.assignee.username})`
-                              : 'Unassigned'}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="card-footer bg-white p-3">
-                    <div className="d-flex justify-content-end gap-3">
-                      <Link to={`/edit-task/${task.id}`} className="btn btn-link text-warning p-0">
-                        <FontAwesomeIcon icon={faEdit} />
-                      </Link>
-                      {task.creator_id === currentUserId && (
-                        <DeleteConfirmationModal onConfirm={() => handleDelete(task.id)} />
-                      )}
-                    </div>
-                  </div>
-                </div>
+                <TaskCard task={task} />
               </div>
             ))
           )}
         </div>
 
-        {/* Pagination - hanya tampilkan jika ada tasks dan lebih dari 1 halaman */}
-        {!isUsingFallback && totalPages > 1 && (
-          <div className="d-flex justify-content-center mt-4 mb-4">
+        {totalPages > 1 && (
+          <div className="d-flex justify-content-center mt-4">
             <div className="custom-pagination">
               <button
                 className="pagination-button"
