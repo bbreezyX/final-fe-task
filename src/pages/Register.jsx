@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { register } from '../services/api';
 
 const Register = () => {
-  const [form, setForm] = useState({ username: '', password: '' });
+  const [form, setForm] = useState({ username: '', password: '', nama: '' });
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -12,12 +13,15 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       await register(form);
       alert('Registration successful! You can now log in.');
-      navigate('/'); // Arahkan ke halaman login setelah berhasil registrasi
+      navigate('/');
     } catch (error) {
       alert('Registration failed. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -35,6 +39,7 @@ const Register = () => {
             onChange={handleChange}
             placeholder="Nama"
             required
+            disabled={isLoading}
           />
         </div>
         <div className="mb-3">
@@ -47,6 +52,7 @@ const Register = () => {
             onChange={handleChange}
             placeholder="Username"
             required
+            disabled={isLoading}
           />
         </div>
         <div className="mb-3">
@@ -59,12 +65,29 @@ const Register = () => {
             onChange={handleChange}
             placeholder="Password"
             required
+            disabled={isLoading}
           />
         </div>
-        <button type="submit" className="btn btn-primary">
-          Register
+        <button type="submit" className="btn btn-primary" disabled={isLoading}>
+          {isLoading ? (
+            <>
+              <span
+                className="spinner-border spinner-border-sm me-2"
+                role="status"
+                aria-hidden="true"
+              ></span>
+              Loading...
+            </>
+          ) : (
+            'Register'
+          )}
         </button>
-        <button type="button" className="btn btn-secondary" onClick={() => navigate('/')}>
+        <button
+          type="button"
+          className="btn btn-secondary"
+          onClick={() => navigate('/')}
+          disabled={isLoading}
+        >
           Back to Login
         </button>
       </form>
