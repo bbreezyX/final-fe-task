@@ -3,73 +3,10 @@ import { Link } from 'react-router-dom';
 import { getTasks, deleteTask } from '../services/api';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash, faSearch, faUser, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import DeleteConfirmationModal from '../pages/Modal';
 
 const TaskList = () => {
-  const fallbackTasks = [
-    {
-      id: 1,
-      title: 'Membuat Fitur Login',
-      description: 'Implementasi sistem autentikasi menggunakan JWT token',
-      status: 'in_progress',
-      priority: 'high',
-      due_date: '2024-12-25',
-      assignee: {
-        username: 'john_doe',
-        nama: 'John Doe',
-      },
-    },
-    {
-      id: 2,
-      title: 'Database Design',
-      description: 'Merancang struktur database untuk aplikasi task management',
-      status: 'todo',
-      priority: 'medium',
-      due_date: '2024-12-20',
-    },
-    {
-      id: 3,
-      title: 'Testing API',
-      description: 'Melakukan testing pada semua endpoint API',
-      status: 'done',
-      priority: 'low',
-      due_date: '2024-12-15',
-    },
-    {
-      id: 4,
-      title: 'UI/UX Design',
-      description: 'Membuat desain antarmuka pengguna yang responsif',
-      status: 'todo',
-      priority: 'high',
-      due_date: '2024-12-18',
-    },
-    {
-      id: 5,
-      title: 'Bug Fixing',
-      description: 'Memperbaiki bug pada fitur task filtering',
-      status: 'in_progress',
-      priority: 'medium',
-      due_date: '2024-12-22',
-    },
-    {
-      id: 6,
-      title: 'Deploy Aplikasi',
-      description: 'Melakukan deployment aplikasi ke server production',
-      status: 'todo',
-      priority: 'high',
-      due_date: '2024-12-28',
-    },
-    {
-      id: 7,
-      title: 'Deploy Aplikasi',
-      description: 'Melakukan deployment aplikasi ke server production',
-      status: 'todo',
-      priority: 'high',
-      due_date: '2024-12-28',
-    },
-  ];
-
   const [tasks, setTasks] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
@@ -77,6 +14,9 @@ const TaskList = () => {
   const [loading, setLoading] = useState(true);
   const [isUsingFallback, setIsUsingFallback] = useState(false);
   const tasksPerPage = 6;
+
+  // Ambil current user ID dari localStorage
+  const currentUserId = parseInt(localStorage.getItem('userId'));
 
   useEffect(() => {
     loadTasks();
@@ -89,27 +29,19 @@ const TaskList = () => {
         setTasks(response.data);
         setIsUsingFallback(false);
       } else {
-        setTasks(fallbackTasks);
         setIsUsingFallback(true);
-        toast.info('Using sample tasks data');
+        toast.info('No tasks found');
       }
     } catch (error) {
       console.error('Failed to fetch tasks:', error);
-      setTasks(fallbackTasks);
       setIsUsingFallback(true);
-      toast.info('Using sample tasks data');
+      toast.error('Failed to load tasks');
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (isUsingFallback) {
-      setTasks(tasks.filter((task) => task.id !== id));
-      toast.success('Task berhasil dihapus! (Local data)');
-      return;
-    }
-
     try {
       await deleteTask(id);
       setTasks(tasks.filter((task) => task.id !== id));
@@ -246,6 +178,7 @@ const TaskList = () => {
                           {formatStatus(task.priority)}
                         </span>
                       </div>
+
                       <div className="d-flex align-items-center mb-2">
                         <span className="text-muted me-2">Due Date:</span>
                         <span>
@@ -254,13 +187,34 @@ const TaskList = () => {
                             : 'Not specified'}
                         </span>
                       </div>
-                      <div className="d-flex align-items-center">
-                        <span className="text-muted me-2">Assignee:</span>
-                        <span>
-                          {task.assignee
-                            ? `${task.assignee.nama} (${task.assignee.username})`
-                            : 'Unassigned'}
-                        </span>
+
+                      {/* Task Assignment Info */}
+                      <div className="border-top pt-2 mt-2">
+                        {/* Show creator info if task is assigned to current user */}
+                        {task.creator_id !== currentUserId && (
+                          <div className="d-flex align-items-center mb-2">
+                            <FontAwesomeIcon icon={faUser} className="text-primary me-2" />
+                            <span className="text-muted me-2">From:</span>
+                            <span className="text-primary">
+                              {task.creator?.nama} ({task.creator?.username})
+                            </span>
+                          </div>
+                        )}
+
+                        {/* Show assignee info */}
+                        <div className="d-flex align-items-center">
+                          <FontAwesomeIcon icon={faUserPlus} className="text-success me-2" />
+                          <span className="text-muted me-2">
+                            {task.creator_id === currentUserId
+                              ? 'Assigned to:'
+                              : 'Also assigned to:'}
+                          </span>
+                          <span className="text-success">
+                            {task.assignee
+                              ? `${task.assignee.nama} (${task.assignee.username})`
+                              : 'Unassigned'}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -270,7 +224,9 @@ const TaskList = () => {
                       <Link to={`/edit-task/${task.id}`} className="btn btn-link text-warning p-0">
                         <FontAwesomeIcon icon={faEdit} />
                       </Link>
-                      <DeleteConfirmationModal onConfirm={() => handleDelete(task.id)} />
+                      {task.creator_id === currentUserId && (
+                        <DeleteConfirmationModal onConfirm={() => handleDelete(task.id)} />
+                      )}
                     </div>
                   </div>
                 </div>
