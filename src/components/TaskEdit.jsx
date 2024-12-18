@@ -22,7 +22,7 @@ const TaskEdit = () => {
     description: '',
     status: '',
     priority: '',
-    assignee_id: '',
+    assignee_username: '', // Ubah dari assignee_id ke assignee_username
     due_date: '',
   });
 
@@ -35,7 +35,11 @@ const TaskEdit = () => {
       const response = await getTasks();
       const task = response.data.find((t) => t.id === parseInt(id));
       if (task) {
-        setForm(task);
+        setForm({
+          ...task,
+          assignee_username: task.assignee?.username || '', // Ambil username jika ada assignee
+          due_date: task.due_date ? task.due_date.split('T')[0] : '', // Format tanggal
+        });
       } else {
         toast.error('Task not found');
         navigate('/task');
@@ -54,7 +58,12 @@ const TaskEdit = () => {
     setLoading(true);
 
     try {
-      await updateTask(id, form);
+      const dataToSubmit = {
+        ...form,
+        assignee_username: form.assignee_username || null, // Kirim null jika empty string
+      };
+
+      await updateTask(id, dataToSubmit);
       toast.success('Task berhasil diupdate!');
       navigate('/task');
     } catch (error) {
@@ -141,11 +150,11 @@ const TaskEdit = () => {
             <h3>Schedule</h3>
             <div className="form-group">
               <input
-                type="number"
+                type="text"
                 className="step-input"
-                placeholder="Assignee ID (Optional)"
-                value={form.assignee_id}
-                onChange={(e) => setForm({ ...form, assignee_id: e.target.value })}
+                placeholder="Assignee Username (Optional)"
+                value={form.assignee_username}
+                onChange={(e) => setForm({ ...form, assignee_username: e.target.value })}
               />
               <input
                 type="date"
