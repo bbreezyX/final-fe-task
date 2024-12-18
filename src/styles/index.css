@@ -225,40 +225,25 @@ body {
 
 .custom-pagination {
   display: flex;
-  gap: 5px;
-  align-items: center;
+  gap: 0.5rem;
 }
 
 .pagination-button {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
+  padding: 0.5rem 1rem;
   border: 1px solid #dee2e6;
   background: white;
-  color: #6c757d;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 14px;
-  transition: all 0.2s ease;
-}
-
-.pagination-button:hover:not(:disabled) {
-  background-color: #e9ecef;
-  border-color: #dee2e6;
-  color: #0d6efd;
+  border-radius: 4px;
 }
 
 .pagination-button.active {
-  background-color: #0d6efd;
-  border-color: #0d6efd;
+  background: #0d6efd;
   color: white;
+  border-color: #0d6efd;
 }
 
 .pagination-button:disabled {
+  background: #e9ecef;
   cursor: not-allowed;
-  opacity: 0.5;
 }
 
 .page-link {
