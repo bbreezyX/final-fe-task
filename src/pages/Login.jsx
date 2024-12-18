@@ -16,13 +16,10 @@ const Login = () => {
       console.log('Sending login data:', form);
       const { data } = await login(form);
       console.log('Login response:', data);
-
       localStorage.setItem('token', data.token);
-      localStorage.setItem('userId', data.user.id);
-      localStorage.setItem('username', data.user.username);
       navigate('/dashboard');
     } catch (error) {
-      console.error('Login error:', error.response?.data || error);
+      console.error('Login error:', error.response?.data || error); // perbaiki error handling
       alert(error.response?.data?.message || 'Login failed. Please check your credentials.');
     }
   };
