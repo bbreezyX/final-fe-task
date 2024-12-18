@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../services/api';
+import { toast } from 'react-toastify';
 
 const Login = () => {
   const [form, setForm] = useState({ username: '', password: '' });
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -12,15 +14,25 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      console.log('Sending login data:', form);
-      const { data } = await login(form);
-      console.log('Login response:', data);
+      const response = await login(form);
+      const { data } = response;
+
+      // Simpan data ke localStorage
       localStorage.setItem('token', data.token);
+      localStorage.setItem('userId', data.user.id);
+      localStorage.setItem('username', data.user.username);
+      localStorage.setItem('nama', data.user.nama);
+
+      toast.success('Login successful!');
       navigate('/dashboard');
     } catch (error) {
-      console.error('Login error:', error.response?.data || error); // perbaiki error handling
-      alert(error.response?.data?.message || 'Login failed. Please check your credentials.');
+      const errorMessage = error.response?.data?.message || 'Login failed';
+      toast.error(errorMessage);
+      console.error('Login error:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -38,6 +50,7 @@ const Login = () => {
             onChange={handleChange}
             placeholder="Enter your username"
             required
+            disabled={loading}
           />
         </div>
         <div className="mb-3">
@@ -50,12 +63,25 @@ const Login = () => {
             onChange={handleChange}
             placeholder="Enter your password"
             required
+            disabled={loading}
           />
         </div>
-        <button type="submit" className="btn btn-primary">
-          Login
+        <button type="submit" className="btn btn-primary" disabled={loading}>
+          {loading ? (
+            <>
+              <span className="spinner-border spinner-border-sm me-2" />
+              Logging in...
+            </>
+          ) : (
+            'Login'
+          )}
         </button>
-        <button type="button" className="btn btn-link" onClick={() => navigate('/register')}>
+        <button
+          type="button"
+          className="btn btn-link"
+          onClick={() => navigate('/register')}
+          disabled={loading}
+        >
           Create an Account
         </button>
       </form>
