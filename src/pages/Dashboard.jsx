@@ -191,7 +191,7 @@ const Dashboard = () => {
                   <div>
                     <h5 className="mb-1">Overdue Tasks</h5>
                     <h3 className="mb-0">{taskStats.overdueTasks}</h3>
-                    <small className="text-white-50">Tasks past due date</small>
+                    <small className="text-white-100">Tasks past due date</small>
                   </div>
                   <FontAwesomeIcon icon={faExclamationTriangle} className="fa-2x text-white-50" />
                 </div>

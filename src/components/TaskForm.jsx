@@ -157,7 +157,6 @@ const TaskForm = () => {
   return (
     <div className="form-wrapper">
       <div className="stepper-form-container">
-        <h2 className="text-2xl font-bold mb-6 text-center">Add Task</h2>
         <StepIndicator />
         <form onSubmit={handleSubmit}>
           {renderStepContent()}

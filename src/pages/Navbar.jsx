@@ -96,7 +96,7 @@ const Navbar = () => {
           </ul>
 
           <button
-            className="btn btn-outline-danger d-flex align-items-center"
+            className="btn btn-danger rounded-pill px-4 d-flex align-items-center"
             onClick={handleLogout}
           >
             <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />

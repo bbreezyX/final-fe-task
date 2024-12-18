@@ -1,9 +1,13 @@
+/* Import font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 /* Base styles */
 html,
 body {
   height: 100%;
   margin: 0;
   padding: 0;
+  font-family: 'Poppins', sans-serif;
 }
 
 /* Layout containers */
@@ -14,6 +18,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: 'Poppins', sans-serif;
 }
 
 .stepper-form-container {
@@ -23,6 +28,7 @@ body {
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 2rem;
+  font-family: 'Poppins', sans-serif;
 }
 
 /* Stepper navigation */
@@ -41,6 +47,8 @@ body {
   gap: 0.5rem;
   color: #9ca3af;
   transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
 }
 
 .stepper-step.active {
@@ -79,7 +87,8 @@ body {
   margin-bottom: 1.5rem;
   color: #1f2937;
   font-size: 1.25rem;
-  font-weight: 500;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
 }
 
 .form-group {
@@ -97,12 +106,19 @@ body {
   font-size: 0.95rem;
   transition: all 0.3s ease;
   background: white;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
 }
 
 .step-input:focus {
   outline: none;
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.step-input::placeholder {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 300;
 }
 
 textarea.step-input {
@@ -118,6 +134,8 @@ select.step-input {
   background-position: right 0.75rem center;
   background-size: 1em;
   padding-right: 2.5rem;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
 }
 
 /* Button styles */
@@ -133,6 +151,7 @@ select.step-input {
   border: none;
   border-radius: 6px;
   font-weight: 500;
+  font-family: 'Poppins', sans-serif;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
@@ -217,6 +236,7 @@ select.step-input {
 
   .stepper-step span {
     font-size: 0.75rem;
+    font-weight: 400;
   }
 
   .stepper-step svg {
