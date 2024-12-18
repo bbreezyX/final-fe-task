@@ -22,7 +22,8 @@ const TaskEdit = () => {
     description: '',
     status: '',
     priority: '',
-    assignee_username: '', // Ubah dari assignee_id ke assignee_username
+    assignee_username: '',
+    creator_username: '',
     due_date: '',
   });
 
@@ -37,8 +38,9 @@ const TaskEdit = () => {
       if (task) {
         setForm({
           ...task,
-          assignee_username: task.assignee?.username || '', // Ambil username jika ada assignee
-          due_date: task.due_date ? task.due_date.split('T')[0] : '', // Format tanggal
+          assignee_username: task.assignee?.username || '',
+          creator_username: task.creator?.username || '',
+          due_date: task.due_date ? task.due_date.split('T')[0] : '',
         });
       } else {
         toast.error('Task not found');
@@ -60,7 +62,8 @@ const TaskEdit = () => {
     try {
       const dataToSubmit = {
         ...form,
-        assignee_username: form.assignee_username || null, // Kirim null jika empty string
+        assignee_username: form.assignee_username || null,
+        due_date: form.due_date || null,
       };
 
       await updateTask(id, dataToSubmit);
@@ -149,6 +152,9 @@ const TaskEdit = () => {
           <div className="step-content">
             <h3>Schedule</h3>
             <div className="form-group">
+              <div className="info-text mb-2">
+                <small className="text-muted">Created by: {form.creator?.nama || 'Unknown'}</small>
+              </div>
               <input
                 type="text"
                 className="step-input"
@@ -174,7 +180,10 @@ const TaskEdit = () => {
   if (loading) {
     return (
       <div className="form-wrapper">
-        <div className="d-flex justify-content-center align-items-center">
+        <div
+          className="d-flex justify-content-center align-items-center"
+          style={{ minHeight: '300px' }}
+        >
           <div className="spinner-border text-primary" role="status">
             <span className="visually-hidden">Loading...</span>
           </div>
@@ -188,7 +197,11 @@ const TaskEdit = () => {
       <div className="stepper-form-container">
         <h2 className="text-center mb-4">Edit Task</h2>
         {form.title && (
-          <div className="alert alert-info text-center mb-4">Editing: {form.title}</div>
+          <div className="alert alert-info text-center mb-4">
+            Editing: {form.title}
+            <br />
+            <small className="text-muted">Created by: {form.creator?.nama || 'Unknown'}</small>
+          </div>
         )}
         <StepIndicator />
         <form onSubmit={handleSubmit}>
