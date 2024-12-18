@@ -21,7 +21,7 @@ const TaskForm = () => {
     description: '',
     status: 'todo',
     priority: 'medium',
-    assignee_id: '',
+    assignee_username: '',
     due_date: '',
   });
 
@@ -37,7 +37,7 @@ const TaskForm = () => {
     try {
       const dataToSubmit = {
         ...form,
-        assignee_id: form.assignee_id ? parseInt(form.assignee_id, 10) : null,
+        assignee_username: form.assignee_username || null,
         due_date: form.due_date || null,
       };
 
@@ -131,11 +131,11 @@ const TaskForm = () => {
             <h3>Schedule</h3>
             <div className="form-group">
               <input
-                type="number"
+                type="text"
                 className="step-input"
-                placeholder="Assignee ID (Optional)"
-                name="assignee_id"
-                value={form.assignee_id}
+                placeholder="Assignee Username (Optional)"
+                name="assignee_username"
+                value={form.assignee_username}
                 onChange={handleChange}
               />
               <input

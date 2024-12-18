@@ -7,7 +7,6 @@ import { faEdit, faTrash, faSearch } from '@fortawesome/free-solid-svg-icons';
 import DeleteConfirmationModal from '../pages/Modal';
 
 const TaskList = () => {
-  // Hardcoded data sebagai fallback
   const fallbackTasks = [
     {
       id: 1,
@@ -16,6 +15,10 @@ const TaskList = () => {
       status: 'in_progress',
       priority: 'high',
       due_date: '2024-12-25',
+      assignee: {
+        username: 'john_doe',
+        nama: 'John Doe',
+      },
     },
     {
       id: 2,
@@ -101,8 +104,6 @@ const TaskList = () => {
   };
 
   const handleDelete = async (id) => {
-    // if (!window.confirm('Are you sure you want to delete this task?')) return;
-
     if (isUsingFallback) {
       setTasks(tasks.filter((task) => task.id !== id));
       toast.success('Task berhasil dihapus! (Local data)');
@@ -245,12 +246,20 @@ const TaskList = () => {
                           {formatStatus(task.priority)}
                         </span>
                       </div>
-                      <div className="d-flex align-items-center">
+                      <div className="d-flex align-items-center mb-2">
                         <span className="text-muted me-2">Due Date:</span>
                         <span>
                           {task.due_date
                             ? new Date(task.due_date).toLocaleDateString()
                             : 'Not specified'}
+                        </span>
+                      </div>
+                      <div className="d-flex align-items-center">
+                        <span className="text-muted me-2">Assignee:</span>
+                        <span>
+                          {task.assignee
+                            ? `${task.assignee.nama} (${task.assignee.username})`
+                            : 'Unassigned'}
                         </span>
                       </div>
                     </div>
@@ -270,7 +279,7 @@ const TaskList = () => {
           )}
         </div>
 
-        {/* Pagination with custom styling */}
+        {/* Pagination */}
         {totalPages > 1 && (
           <div className="d-flex justify-content-center mt-4 mb-4">
             <div className="custom-pagination">
