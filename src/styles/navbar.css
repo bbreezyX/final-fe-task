@@ -41,7 +41,7 @@
 
 .nav-link:hover,
 .nav-link.active {
-  color: #0d6efd;
+  color: #000000;
   background-color: rgba(13, 110, 253, 0.1);
 }
 

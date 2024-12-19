@@ -22,9 +22,14 @@ const TaskEdit = () => {
     description: '',
     status: '',
     priority: '',
-    assignee_id: '',
+    assignee_username: '',
     due_date: '',
   });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+  };
 
   useEffect(() => {
     loadTask();
@@ -35,7 +40,10 @@ const TaskEdit = () => {
       const response = await getTasks();
       const task = response.data.find((t) => t.id === parseInt(id));
       if (task) {
-        setForm(task);
+        setForm({
+          ...task,
+          assignee_username: task.assignee_username || '',
+        });
       } else {
         toast.error('Task not found');
         navigate('/task');
@@ -54,7 +62,13 @@ const TaskEdit = () => {
     setLoading(true);
 
     try {
-      await updateTask(id, form);
+      const dataToSubmit = {
+        ...form,
+        assignee_username: form.assignee_username || null,
+        due_date: form.due_date || null,
+      };
+
+      await updateTask(id, dataToSubmit);
       toast.success('Task berhasil diupdate!');
       navigate('/task');
     } catch (error) {
@@ -95,15 +109,17 @@ const TaskEdit = () => {
                 type="text"
                 className="step-input"
                 placeholder="Task Title"
+                name="title"
                 value={form.title}
-                onChange={(e) => setForm({ ...form, title: e.target.value })}
+                onChange={handleChange}
                 required
               />
               <textarea
                 className="step-input"
                 placeholder="Task Description"
+                name="description"
                 value={form.description}
-                onChange={(e) => setForm({ ...form, description: e.target.value })}
+                onChange={handleChange}
                 required
               />
             </div>
@@ -116,8 +132,9 @@ const TaskEdit = () => {
             <div className="form-group">
               <select
                 className="step-input"
+                name="status"
                 value={form.status}
-                onChange={(e) => setForm({ ...form, status: e.target.value })}
+                onChange={handleChange}
               >
                 <option value="todo">To Do</option>
                 <option value="in_progress">In Progress</option>
@@ -125,8 +142,9 @@ const TaskEdit = () => {
               </select>
               <select
                 className="step-input"
+                name="priority"
                 value={form.priority}
-                onChange={(e) => setForm({ ...form, priority: e.target.value })}
+                onChange={handleChange}
               >
                 <option value="low">Low Priority</option>
                 <option value="medium">Medium Priority</option>
@@ -141,17 +159,19 @@ const TaskEdit = () => {
             <h3>Schedule</h3>
             <div className="form-group">
               <input
-                type="number"
+                type="text"
                 className="step-input"
-                placeholder="Assignee ID (Optional)"
-                value={form.assignee_id}
-                onChange={(e) => setForm({ ...form, assignee_id: e.target.value })}
+                placeholder="Assignee Username (Optional)"
+                name="assignee_username"
+                value={form.assignee_username}
+                onChange={handleChange}
               />
               <input
                 type="date"
                 className="step-input"
+                name="due_date"
                 value={form.due_date}
-                onChange={(e) => setForm({ ...form, due_date: e.target.value })}
+                onChange={handleChange}
                 required
               />
             </div>
