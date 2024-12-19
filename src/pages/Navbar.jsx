@@ -149,14 +149,22 @@ const Navbar = () => {
             </button>
 
             {showDropdown && (
-              <div className="dropdown-menu show position-absolute end-0 mt-2 py-2 shadow-sm">
+              <div
+                className="dropdown-menu show position-absolute end-0 mt-2 py-2 shadow-sm"
+                style={{
+                  transform: 'none',
+                  animation: 'none',
+                }}
+              >
                 <div className="px-4 py-2 border-bottom">
                   <div className="small text-muted">ID: {userData.id}</div>
                   <div className="fw-bold">{userData.username}</div>
                 </div>
                 <button
-                  className="dropdown-item text-danger d-flex align-items-center px-4 py-2"
+                  type="button"
                   onClick={handleLogout}
+                  className="dropdown-item d-flex align-items-center px-4 py-2"
+                  style={{ color: '#dc3545' }}
                 >
                   <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
                   Logout
