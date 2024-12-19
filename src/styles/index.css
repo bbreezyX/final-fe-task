@@ -267,7 +267,46 @@ body {
   background-color: #fff;
   border-color: #dee2e6;
 }
+.shadow-hover {
+  transition: box-shadow 0.2s ease-in-out;
+}
 
+.shadow-hover:hover {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.avatar {
+  position: relative;
+  display: inline-block;
+}
+
+.avatar-sm {
+  width: 32px;
+  height: 32px;
+}
+
+.avatar-initial {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 500;
+}
+
+.avatar-group {
+  display: flex;
+  margin-right: 0.5rem;
+}
+
+.avatar-group .avatar {
+  margin-left: -0.5rem;
+}
+
+.avatar-group .avatar:first-child {
+  margin-left: 0;
+}
 /* Responsive styles */
 @media (max-width: 1400px) {
   .container {

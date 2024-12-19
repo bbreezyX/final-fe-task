@@ -155,70 +155,126 @@ const TaskList = () => {
   );
 
   const TaskCard = ({ task }) => (
-    <div className="card h-100 shadow-sm border-0 hover-shadow">
+    <div className="card h-100 border-0 shadow-hover position-relative">
+      {/* Priority Indicator */}
+      <div
+        className={`position-absolute top-0 start-0 h-100 rounded-start`}
+        style={{
+          width: '4px',
+          backgroundColor:
+            task.priority === 'high'
+              ? '#dc3545'
+              : task.priority === 'medium'
+                ? '#ffc107'
+                : '#198754',
+        }}
+      />
+
+      {/* Card Header with Status */}
+      <div className="card-header bg-transparent border-0 pt-3 pb-0 px-4">
+        <div className="d-flex justify-content-between align-items-center">
+          <h5 className="card-title h6 text-truncate mb-0 fw-bold" style={{ maxWidth: '80%' }}>
+            {task.title}
+          </h5>
+          <span className={`${getStatusBadgeClass(task.status)} px-3 py-1 rounded-pill`}>
+            {formatStatus(task.status)}
+          </span>
+        </div>
+      </div>
+
       <div className="card-body p-4">
-        <div className="d-flex justify-content-between align-items-start mb-3">
-          <h5 className="card-title text-truncate mb-0 me-2">{task.title}</h5>
-          <span className={getStatusBadgeClass(task.status)}>{formatStatus(task.status)}</span>
+        {/* Description with Gradient Fade */}
+        <div className="position-relative mb-3" style={{ minHeight: '4.5em' }}>
+          <p
+            className="card-text small text-muted mb-0"
+            style={{
+              overflow: 'hidden',
+              display: '-webkit-box',
+              WebkitLineClamp: '3',
+              WebkitBoxOrient: 'vertical',
+            }}
+          >
+            {task.description}
+          </p>
+          <div
+            className="position-absolute bottom-0 w-100 h-25"
+            style={{
+              background: 'linear-gradient(transparent, white)',
+            }}
+          />
         </div>
 
-        <div className="divider"></div>
-
-        <p
-          className="card-text text-muted mb-3 mt-3"
-          style={{
-            overflow: 'hidden',
-            display: '-webkit-box',
-            WebkitLineClamp: '3',
-            WebkitBoxOrient: 'vertical',
-            minHeight: '4.5em',
-          }}
-        >
-          {task.description}
-        </p>
-
+        {/* Task Details */}
         <div className="mb-3">
-          <div className="d-flex align-items-center mb-2">
-            <span className="text-muted me-2">Priority:</span>
-            <span className={`fw-semibold ${getPriorityClass(task.priority)}`}>
-              {formatStatus(task.priority)}
-            </span>
-          </div>
-
-          <div className="d-flex align-items-center mb-2">
-            <span className="text-muted me-2">Due Date:</span>
-            <span>
-              {task.due_date ? new Date(task.due_date).toLocaleDateString() : 'Not specified'}
-            </span>
-          </div>
-
-          <div className="border-top pt-2 mt-2">
-            {task.creator_id !== currentUserId && (
-              <div className="d-flex align-items-center mb-2">
-                <FontAwesomeIcon icon={faUser} className="text-primary me-2" />
-                <span className="text-muted me-2">From:</span>
-                <span className="text-primary">
-                  {task.creator?.nama} ({task.creator?.username})
-                </span>
-              </div>
-            )}
-
+          <div className="d-flex align-items-center gap-3 mb-2">
             <div className="d-flex align-items-center">
-              <FontAwesomeIcon icon={faUserPlus} className="text-success me-2" />
-              <span className="text-muted me-2">
-                {task.creator_id === currentUserId ? 'Assigned to:' : 'Also assigned to:'}
+              <span
+                className="badge rounded-circle p-2 me-2"
+                style={{
+                  backgroundColor:
+                    task.priority === 'high'
+                      ? '#dc354520'
+                      : task.priority === 'medium'
+                        ? '#ffc10720'
+                        : '#19875420',
+                }}
+              >
+                <i className={`fas fa-flag ${getPriorityClass(task.priority)}`}></i>
               </span>
-              <span className="text-success">
-                {task.assignee ? `${task.assignee.nama} (${task.assignee.username})` : 'Unassigned'}
+              <span className={`small ${getPriorityClass(task.priority)} fw-semibold`}>
+                {formatStatus(task.priority)}
+              </span>
+            </div>
+            <div className="d-flex align-items-center">
+              <span className="badge bg-light text-dark rounded-pill">
+                <i className="far fa-calendar-alt me-1"></i>
+                {task.due_date ? new Date(task.due_date).toLocaleDateString() : 'Not set'}
+              </span>
+            </div>
+          </div>
+
+          {/* Assignee Information */}
+          <div className="border-top pt-3 mt-3">
+            <div className="d-flex align-items-center gap-2">
+              <div className="avatar-group">
+                {task.creator_id !== currentUserId && (
+                  <div
+                    className="avatar avatar-sm"
+                    data-bs-toggle="tooltip"
+                    title={`From: ${task.creator?.nama}`}
+                  >
+                    <div className="avatar-initial rounded-circle bg-primary">
+                      {task.creator?.nama.charAt(0)}
+                    </div>
+                  </div>
+                )}
+                <div
+                  className="avatar avatar-sm"
+                  data-bs-toggle="tooltip"
+                  title={`Assigned to: ${task.assignee?.nama || 'Unassigned'}`}
+                >
+                  <div className="avatar-initial rounded-circle bg-success">
+                    {task.assignee ? task.assignee.nama.charAt(0) : 'U'}
+                  </div>
+                </div>
+              </div>
+              <span className="small text-muted">
+                {task.assignee ? task.assignee.nama : 'Unassigned'}
               </span>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="card-footer bg-white p-3">
-        <div className="d-flex justify-content-end gap-3">
-          <Link to={`/edit-task/${task.id}`} className="btn btn-link text-warning p-0">
+      {/* Card Footer */}
+      <div className="card-footer bg-transparent border-0 p-3">
+        <div className="d-flex justify-content-end gap-2">
+          <Link
+            to={`/edit-task/${task.id}`}
+            className="btn btn-sm btn-light rounded-pill"
+            data-bs-toggle="tooltip"
+            title="Edit"
+          >
             <FontAwesomeIcon icon={faEdit} />
           </Link>
           {task.creator_id === currentUserId && (
