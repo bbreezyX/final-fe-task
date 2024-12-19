@@ -8,6 +8,8 @@ import {
   faSignOutAlt,
   faBars,
   faTimes,
+  faUser,
+  faCaretDown,
 } from '@fortawesome/free-solid-svg-icons';
 
 const Navbar = () => {
@@ -15,20 +17,52 @@ const Navbar = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
+    // Get user data from localStorage
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
+    const username = localStorage.getItem('username');
+    const nama = localStorage.getItem('nama');
+
+    if (token && userId && username && nama) {
+      setUserData({
+        id: userId,
+        username: username,
+        nama: nama,
+      });
+    } else {
+      navigate('/login');
+    }
+
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, [navigate]);
+
+  useEffect(() => {
+    const closeDropdown = (e) => {
+      if (!e.target.closest('.user-dropdown-container')) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener('click', closeDropdown);
+    return () => document.removeEventListener('click', closeDropdown);
   }, []);
 
   const handleLogout = () => {
     if (window.confirm('Are you sure you want to logout?')) {
+      // Clear all localStorage items
       localStorage.removeItem('token');
-      navigate('/');
+      localStorage.removeItem('userId');
+      localStorage.removeItem('username');
+      localStorage.removeItem('nama');
+      navigate('/login');
     }
   };
 
@@ -40,9 +74,18 @@ const Navbar = () => {
     setIsMenuOpen(false);
   };
 
+  const toggleDropdown = (e) => {
+    e.stopPropagation();
+    setShowDropdown(!showDropdown);
+  };
+
   const isActive = (path) => {
     return location.pathname === path;
   };
+
+  if (!userData) {
+    return null;
+  }
 
   return (
     <nav className={`navbar navbar-expand-lg fixed-top ${scrolled ? 'navbar-scrolled' : ''}`}>
@@ -95,13 +138,32 @@ const Navbar = () => {
             </li>
           </ul>
 
-          <button
-            className="btn btn-danger rounded-pill px-4 d-flex align-items-center"
-            onClick={handleLogout}
-          >
-            <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
-            Logout
-          </button>
+          <div className="user-dropdown-container position-relative">
+            <button
+              className="btn btn-light rounded-pill px-4 d-flex align-items-center"
+              onClick={toggleDropdown}
+            >
+              <FontAwesomeIcon icon={faUser} className="me-2" />
+              {userData.nama}
+              <FontAwesomeIcon icon={faCaretDown} className="ms-2" />
+            </button>
+
+            {showDropdown && (
+              <div className="dropdown-menu show position-absolute end-0 mt-2 py-2 shadow-sm">
+                <div className="px-4 py-2 border-bottom">
+                  <div className="small text-muted">ID: {userData.id}</div>
+                  <div className="fw-bold">{userData.username}</div>
+                </div>
+                <button
+                  className="dropdown-item text-danger d-flex align-items-center px-4 py-2"
+                  onClick={handleLogout}
+                >
+                  <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </nav>
